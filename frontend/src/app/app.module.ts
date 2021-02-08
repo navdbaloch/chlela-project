@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -7,7 +9,7 @@ import { ActionButtonComponent } from './action-button/action-button.component';
 import { ActionPaneComponent } from './action-pane/action-pane.component';
 import { ImagePaneComponent } from './image-pane/image-pane.component';
 import { ModalComponent } from './modal/modal.component';
-import { FormsModule } from '@angular/forms';
+import { PublishService } from './publish.service';
 
 @NgModule({
   declarations: [
@@ -20,9 +22,10 @@ import { FormsModule } from '@angular/forms';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [PublishService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

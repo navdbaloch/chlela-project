@@ -1,7 +1,10 @@
+import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { fromEvent, Observable } from 'rxjs';
 import { ActionType } from '../action-button/action-button.component';
 import { ModalComponent } from '../modal/modal.component';
+import { PublishService } from '../publish.service';
+import { dataURItoBlob } from '../utils';
 
 @Component({
   selector: 'app-image-pane',
@@ -13,9 +16,8 @@ export class ImagePaneComponent implements AfterViewInit {
   private canvasRef: ElementRef<HTMLCanvasElement> | null = null;
   @ViewChild('canvasContainer')
   private canvasContainerRef: ElementRef<HTMLDivElement> | null = null;
-  @ViewChild('modal')
-  private modal: ModalComponent;
-
+  @ViewChild('modal') private modal: ModalComponent;
+  @ViewChild('progressModal') private progressModal: ModalComponent;
   private image: HTMLImageElement;
   private context2D: CanvasRenderingContext2D;
   private imgAngleInDegrees = 0;
@@ -33,9 +35,11 @@ export class ImagePaneComponent implements AfterViewInit {
   get isImageSelected(): boolean {
     return this.image.src ? true : false;
   }
+  fileProgress: number = 0;
+
   imgWidthPx = 0; imgHeightPx = 0;
 
-  constructor() {
+  constructor(private publishService: PublishService) {
     this.createImageEl();
   }
 
@@ -110,7 +114,27 @@ export class ImagePaneComponent implements AfterViewInit {
   private resizeCanvas() {
     this.canvas.width = this.imgWidth < this.canvasContainer.clientWidth ? this.canvasContainer.clientWidth : this.imgWidth;
     this.canvas.height = this.imgHeight < this.canvasContainer.clientHeight ? this.canvasContainer.clientHeight : this.imgHeight;
+  }
 
+  private publish() {
+    this.progressModal.open();
+    const blob = dataURItoBlob(this.canvas.toDataURL());
+    this.publishService.uploadFile(blob).subscribe(
+      event => {
+        if (event.type == HttpEventType.UploadProgress) {
+          const percentDone = Math.round(100 * event.loaded / event.total);
+          this.fileProgress = percentDone;
+        } else if (event instanceof HttpResponse) {
+          console.log(event);
+        }
+      },
+      (err) => {
+        this.progressModal.close();
+        alert(`Publish Error`);
+        console.log(`Error`, err);
+      }, () => {
+        this.progressModal.close();
+      })
   }
 
   ngAfterViewInit(): void {
@@ -133,8 +157,10 @@ export class ImagePaneComponent implements AfterViewInit {
         }
         break;
       case ActionType.RESIZE:
-        // this.resizeImage();
         this.modal.open();
+        break;
+      case ActionType.UPLOAD:
+        this.publish();
         break;
     }
   }

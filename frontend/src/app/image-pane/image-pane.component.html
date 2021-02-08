@@ -36,6 +36,10 @@
   </div>
 </div>
 
+<app-modal #progressModal>
+  <progress [value]="fileProgress" max="100"></progress> {{fileProgress}}%
+</app-modal>
+
 <app-modal #modal>
   <div>
     <span>Horizontal:</span><input [(ngModel)]="imgWidthPx" type="text" placeholder="Horizontal">
