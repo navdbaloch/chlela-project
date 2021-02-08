@@ -1,0 +1,6 @@
+<div class="wrapper">
+    <button (click)="onClick.emit()" class='{{options.color}}'>
+        <img src="/assets/action-button-icons/{{options.icon}}.svg">
+        <span *ngIf="showLabel && options.label" class="label">{{ options.label }}</span>
+    </button>
+</div>

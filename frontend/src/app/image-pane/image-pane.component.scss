@@ -1,0 +1,42 @@
+.wrapper,
+#image-upload-msg {
+  width: 100%;
+  height: 100%;
+}
+
+#image-upload-msg {
+  // text-align: center;
+  font-size: 24px;
+  color: gainsboro;
+}
+#image-upload-msg > p {
+  text-align: center;
+}
+
+.wrapper {
+  overflow: auto;
+}
+
+#file-selector {
+  width: 100%;
+  top: 0;
+  position: absolute;
+  height: 100%;
+  left: 0;
+  opacity: 0;
+}
+
+.arrow-key-btn {
+  margin: 2px;
+  color: #908a8a;
+  border: none;
+  font-size: 25px;
+  padding: 3px;
+  min-width: 37px;
+}
+
+#move-keys-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+}

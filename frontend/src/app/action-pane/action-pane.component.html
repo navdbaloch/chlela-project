@@ -1,0 +1,8 @@
+<div class="wrapper">
+  <ng-container *ngFor="let actionBtn of actionButtons">
+    <app-action-button
+      (click)="onActionPerformed.emit(actionBtn.actionType)"
+      [options]="actionBtn"
+    ></app-action-button>
+  </ng-container>
+</div>

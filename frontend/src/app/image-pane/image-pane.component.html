@@ -1,0 +1,37 @@
+<div
+  #canvasContainer
+  class="wrapper"
+  (drop)="onDrop($event)"
+  (dragover)="onDragOver($event)"
+>
+  <div *ngIf="isImageSelected === false" id="image-upload-msg">
+    <p>
+      Drag & Drop Or Click here to Load Image
+    </p>
+    <input
+      (change)="handleFileInput($event.target.files)"
+      type="file"
+      id="file-selector"
+    />
+  </div>
+
+  <canvas #canvas id="main-canvas"> </canvas>
+
+  <div *ngIf="isImageSelected" id="move-keys-container">
+    <div style="text-align: center;">
+      <button
+        class="arrow-key-btn"
+        title="use w"
+        style="align-self: top;"
+        (click)="moveImage('y', -10)"
+      >
+        &uarr;
+      </button>
+    </div>
+    <div>
+      <button class="arrow-key-btn" title="use a" (click)="moveImage('x', -10)">&larr;</button>
+      <button class="arrow-key-btn" title="use s" (click)="moveImage('y', 10)">&darr;</button>
+      <button class="arrow-key-btn" title="use d" (click)="moveImage('x', 10)">&rarr;</button>
+    </div>
+  </div>
+</div>

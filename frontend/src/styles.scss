@@ -1,1 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  margin: 0px;
+  height: 100%;
+}
+
+button:focus {
+  outline: none;
+  cursor: pointer;
+}
+
+.action-pane {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  margin-left: -230px;
+}
+
+@media only screen and (max-width: 600px) {
+  .action-pane {
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    margin-left: 0px;
+  }
+}

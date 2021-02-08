@@ -1,0 +1,41 @@
+button {
+  border-radius: 12px;
+  padding: 20px;
+  background-color: white;
+  color: black;
+  text-align: center;
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  margin: 16px 16px !important;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+}
+
+button.primary {
+  background-color: #1ea7fd;
+}
+
+button > img {
+  width: 20px;
+}
+
+.wrapper {
+  position: relative;
+  display: inline-block;
+  opacity: 1;
+}
+
+span.label {
+  position: absolute;
+  left: 0px;
+  font-size: 14px;
+  top: -9px;
+  background-color: black;
+  color: white;
+  padding: 2px;
+  border-radius: 2px;
+  width: fit-content;
+  display: inline-block;
+}
