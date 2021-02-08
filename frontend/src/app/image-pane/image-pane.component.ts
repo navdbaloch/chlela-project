@@ -1,10 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { fromEvent, Observable } from 'rxjs';
 import { ActionType } from '../action-button/action-button.component';
-
-const ARROW_KEY_NAMES = [
-  'w', 's', 'a', 'd'
-];
+import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-image-pane',
@@ -16,6 +13,9 @@ export class ImagePaneComponent implements AfterViewInit {
   private canvasRef: ElementRef<HTMLCanvasElement> | null = null;
   @ViewChild('canvasContainer')
   private canvasContainerRef: ElementRef<HTMLDivElement> | null = null;
+  @ViewChild('modal')
+  private modal: ModalComponent;
+
   private image: HTMLImageElement;
   private context2D: CanvasRenderingContext2D;
   private imgAngleInDegrees = 0;
@@ -33,9 +33,18 @@ export class ImagePaneComponent implements AfterViewInit {
   get isImageSelected(): boolean {
     return this.image.src ? true : false;
   }
+  imgWidthPx = 0; imgHeightPx = 0;
 
   constructor() {
     this.createImageEl();
+  }
+
+  resizeImage() {
+    this.modal.close();
+    this.imgWidth = this.imgWidthPx;
+    this.imgHeight = this.imgHeightPx;
+    this.resizeCanvas();
+    this.drawImage();
   }
 
   private createImageEl() {
@@ -44,6 +53,9 @@ export class ImagePaneComponent implements AfterViewInit {
     this.image.onload = () => {
       this.imgWidth = this.image.width;
       this.imgHeight = this.image.height;
+
+      this.imgWidthPx = this.imgWidth;
+      this.imgHeightPx = this.imgHeight;
       this.resizeCanvas();
       this.drawImage();
     };
@@ -90,13 +102,6 @@ export class ImagePaneComponent implements AfterViewInit {
     FR.readAsDataURL(file);
   }
 
-  private resizeImage() {
-    this.imgWidth = this.imgWidth * 0.5;
-    this.imgHeight = this.imgWidth * 0.5;
-    this.resizeCanvas();
-    this.drawImage();
-  }
-
   private drawImage() {
     this.clearCanvas();
     this.context2D.drawImage(this.image, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight);
@@ -128,7 +133,8 @@ export class ImagePaneComponent implements AfterViewInit {
         }
         break;
       case ActionType.RESIZE:
-        this.resizeImage();
+        // this.resizeImage();
+        this.modal.open();
         break;
     }
   }
@@ -162,9 +168,8 @@ export class ImagePaneComponent implements AfterViewInit {
     this.drawImage();
   }
 
-  @HostListener('document:keypress', ['$event'])
+  @HostListener('keypress', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    event.preventDefault();
     switch (event.key) {
       case 'w':
         this.moveImage('y', -10);

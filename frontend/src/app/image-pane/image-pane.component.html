@@ -35,3 +35,18 @@
     </div>
   </div>
 </div>
+
+<app-modal #modal>
+  <div>
+    <span>Horizontal:</span><input [(ngModel)]="imgWidthPx" type="text" placeholder="Horizontal">
+  </div>
+  <div>
+    <span>Vertical:</span><input [(ngModel)]="imgHeightPx" type="text" placeholder="Vertical">
+  </div>
+  <div>
+    <div class="btn-container">
+      <button (click)="modal.close()" class="btn">Cancel</button>
+      <button (click)="resizeImage()"  class="btn btn-primary">Apply</button>
+    </div>
+  </div>
+</app-modal>

@@ -6,17 +6,21 @@ import { AppComponent } from './app.component';
 import { ActionButtonComponent } from './action-button/action-button.component';
 import { ActionPaneComponent } from './action-pane/action-pane.component';
 import { ImagePaneComponent } from './image-pane/image-pane.component';
+import { ModalComponent } from './modal/modal.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
     ActionButtonComponent,
     ActionPaneComponent,
-    ImagePaneComponent
+    ImagePaneComponent,
+    ModalComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
