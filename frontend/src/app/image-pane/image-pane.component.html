@@ -29,28 +29,47 @@
       </button>
     </div>
     <div>
-      <button class="arrow-key-btn" title="use a" (click)="moveImage('x', -10)">&larr;</button>
-      <button class="arrow-key-btn" title="use s" (click)="moveImage('y', 10)">&darr;</button>
-      <button class="arrow-key-btn" title="use d" (click)="moveImage('x', 10)">&rarr;</button>
+      <button class="arrow-key-btn" title="use a" (click)="moveImage('x', -10)">
+        &larr;
+      </button>
+      <button class="arrow-key-btn" title="use s" (click)="moveImage('y', 10)">
+        &darr;
+      </button>
+      <button class="arrow-key-btn" title="use d" (click)="moveImage('x', 10)">
+        &rarr;
+      </button>
     </div>
   </div>
 </div>
 
+<app-modal #fileDownloadModal>
+  <button class="btn" (click)="fileDownloadModal.close()">Close</button>
+  <br />
+  <img width="100%" height="100%" [src]="lastedPublishedImage" alt="Image" />
+</app-modal>
+
 <app-modal #progressModal>
-  <progress [value]="fileProgress" max="100"></progress> {{fileProgress}}%
+  <progress [value]="fileProgress" max="100"></progress> {{ fileProgress }}%
 </app-modal>
 
 <app-modal #modal>
-  <div>
-    <span>Horizontal:</span><input [(ngModel)]="imgWidthPx" type="text" placeholder="Horizontal">
+  <div class="form-group">
+    <label for="horizontal">Horizontal:</label>
+    <input id="horizontal" [(ngModel)]="imgWidthPx" type="text" placeholder="Horizontal" />
   </div>
-  <div>
-    <span>Vertical:</span><input [(ngModel)]="imgHeightPx" type="text" placeholder="Vertical">
+  <div class="form-group">
+    <label for="vertical">Vertical:</label>
+    <input
+      id="vertical"
+      [(ngModel)]="imgHeightPx"
+      type="text"
+      placeholder="Vertical"
+    />
   </div>
   <div>
     <div class="btn-container">
       <button (click)="modal.close()" class="btn">Cancel</button>
-      <button (click)="resizeImage()"  class="btn btn-primary">Apply</button>
+      <button (click)="resizeImage()" class="btn btn-primary">Apply</button>
     </div>
   </div>
 </app-modal>

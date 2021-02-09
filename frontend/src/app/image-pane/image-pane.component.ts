@@ -1,10 +1,15 @@
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { fromEvent, Observable } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 import { ActionType } from '../action-button/action-button.component';
 import { ModalComponent } from '../modal/modal.component';
 import { PublishService } from '../publish.service';
 import { dataURItoBlob } from '../utils';
+
+export interface PublishResponse {
+  fileName: string;
+}
 
 @Component({
   selector: 'app-image-pane',
@@ -18,12 +23,13 @@ export class ImagePaneComponent implements AfterViewInit {
   private canvasContainerRef: ElementRef<HTMLDivElement> | null = null;
   @ViewChild('modal') private modal: ModalComponent;
   @ViewChild('progressModal') private progressModal: ModalComponent;
+  @ViewChild('fileDownloadModal') private fileDownloadModal: ModalComponent;
   private image: HTMLImageElement;
   private context2D: CanvasRenderingContext2D;
   private imgAngleInDegrees = 0;
   private imgPosX = 0; private imgPosY = 0;
   private imgWidth = 0; private imgHeight = 0;
-
+  private latestPublishImageName:string;
   private get canvas(): HTMLCanvasElement {
     return this.canvasRef?.nativeElement;
   }
@@ -32,6 +38,9 @@ export class ImagePaneComponent implements AfterViewInit {
     return this.canvasContainerRef?.nativeElement;
   }
 
+  get lastedPublishedImage(): string {
+    return `${environment.apiUrl}/user-images/${this.latestPublishImageName}.png`
+  }
   get isImageSelected(): boolean {
     return this.image.src ? true : false;
   }
@@ -117,15 +126,17 @@ export class ImagePaneComponent implements AfterViewInit {
   }
 
   private publish() {
+    this.fileProgress = 0;
     this.progressModal.open();
     const blob = dataURItoBlob(this.canvas.toDataURL());
+
     this.publishService.uploadFile(blob).subscribe(
       event => {
         if (event.type == HttpEventType.UploadProgress) {
-          const percentDone = Math.round(100 * event.loaded / event.total);
-          this.fileProgress = percentDone;
+          this.fileProgress = Math.round(100 * event.loaded / event.total);
         } else if (event instanceof HttpResponse) {
-          console.log(event);
+          this.latestPublishImageName = (event.body as PublishResponse).fileName;
+          this.fileDownloadModal.open();
         }
       },
       (err) => {
