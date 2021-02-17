@@ -3,7 +3,7 @@ This s a test assignment from CHLELA
 
 A picture framing company reached out to you for help with their online store. They would like their customers to be able to upload a photo, make some edits then place the photo around a virtual frame.
 
-# [Demo](https://drive.google.com/file/d/1i7Di1vx-TX40CY-Vse205kQtRcDJYytH/view?usp=sharing)
+# [Demo](https://www.youtube.com/watch?v=qqYPe1eLkcQ)
 
 
 
