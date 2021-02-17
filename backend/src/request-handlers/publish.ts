@@ -12,9 +12,7 @@ export interface PublishRequest {
 
 export const publishRequestHandler = async (request: PublishRequest) => {
     const fileRawData = request.files.upload.data as any;
-    const mainImg = await Canvas.loadImage(Buffer.from(fileRawData));
-    fs.writeFileSync('orignal-img.png', Buffer.from(fileRawData));
-    const fileName = await storeUserFile(await applyFrame(mainImg));
+    const fileName = await storeUserFile(Buffer.from(fileRawData));
     return {
         fileName
     };

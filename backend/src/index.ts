@@ -6,6 +6,7 @@ import fileUplaod from 'express-fileupload';
 
 import { absPath } from "./utils";
 import { PublishRequest, publishRequestHandler } from "./request-handlers/publish";
+import { getFrames } from "./request-handlers/get-frames";
 
 // load configurations
 dotenv.config({ path: absPath('.env') });
@@ -23,6 +24,11 @@ const port = process.env.PORT || 8080;
 app.get("/", (req, res) => {
     res.send("Hello world!");
 });
+
+app.get("/get-frames", async (req, res) => {
+    res.send(JSON.stringify(getFrames()));
+});
+
 
 app.post("/publish", async (req, res) => {
     const response = await publishRequestHandler((req as any) as PublishRequest);

@@ -4,18 +4,27 @@
   (drop)="onDrop($event)"
   (dragover)="onDragOver($event)"
 >
-  <div *ngIf="isImageSelected === false" id="image-upload-msg">
-    <p>
-      Drag & Drop Or Click here to Load Image
-    </p>
-    <input
-      (change)="handleFileInput($event.target.files)"
-      type="file"
-      id="file-selector"
-    />
-  </div>
+  <ng-container *ngIf="isImageSelected === false">
+    <div id="image-upload-msg">
+      <h2>
+        Welcome to the PhotoFrameShop!
+      </h2>
+      <p>
+        Here you can virtually see a frame applied on your photo before you
+        order it.
+        <br />
+        Please drag & drop your photo here or click on this message to open file
+        selector window.
+      </p>
+      <input
+        (change)="handleFileInput($event.target.files)"
+        type="file"
+        id="file-selector"
+      />
+    </div>
+  </ng-container>
 
-  <canvas #canvas id="main-canvas"> </canvas>
+  <canvas #canvas width="100%" height="100%" id="main-canvas"> </canvas>
 
   <div *ngIf="isImageSelected" id="move-keys-container">
     <div style="text-align: center;">
@@ -42,9 +51,92 @@
   </div>
 </div>
 
+<app-modal #publishModal>
+  <p>You are a step away from the awesome frame!</p>
+  <div class="grid">
+    <div class="row">
+      <label for="name" class="col-1">Name</label>
+      <div class="col-2">
+        <input id="name" type="text" />
+      </div>
+    </div>
+    <div class="row">
+      <label for="address" class="col-1">Shipping Address</label>
+      <div class="col-2">
+        <input id="address" type="text" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1">
+        <h3>Payment Details</h3>
+      </div>
+    </div>
+    <div class="row">
+      <label for="card-owner" class="col-1">Owner</label>
+      <div class="col-2">
+        <input id="card-owner" type="text" />
+      </div>
+    </div>
+    <div class="row">
+      <label for="card-number" class="col-1">Card Number</label>
+      <div class="col-2">
+        <input id="card-number" type="text" />
+      </div>
+    </div>
+    <div class="row">
+      <label for="card-cvv" class="col-1">CVV</label>
+      <div class="col-1">
+        <input id="card-cvv" type="text" />
+      </div>
+    </div>
+
+    <div class="row">
+      <label for="card-expiry" class="col-1">Expiration Date</label>
+      <div class="col-1">
+        <select id="card-expiry" name="card-expiry">
+          <option
+            *ngFor="
+              let m of [
+                'Jan',
+                'Fed',
+                'Mar',
+                'Apr',
+                'May',
+                'June',
+                'July',
+                'Aug',
+                'Sep',
+                'Oct',
+                'Nov',
+                'Dec'
+              ]
+            "
+          >
+            {{ m }}
+          </option>
+        </select>
+      </div>
+      <div class="col-1">
+        <select>
+          <option *ngFor="let y of [1, 2, 3, 4, 5, 6, 7]">
+            {{ y + 2020 }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <button (click)="publish()" class="btn btn-primary purchase-btn">
+        Purchase
+      </button>
+    </div>
+  </div>
+</app-modal>
+
 <app-modal #fileDownloadModal>
-  <button class="btn" (click)="fileDownloadModal.close()">Close</button>
-  <br />
+  <p>
+    Hurry! your order has been received & you will get your framed picture in 3
+    working days. <a (click)="fileDownloadModal.close()" href="#">Close</a>
+  </p>
   <img width="100%" height="100%" [src]="lastedPublishedImage" alt="Image" />
 </app-modal>
 
@@ -55,7 +147,12 @@
 <app-modal #modal>
   <div class="form-group">
     <label for="horizontal">Horizontal:</label>
-    <input id="horizontal" [(ngModel)]="imgWidthPx" type="text" placeholder="Horizontal" />
+    <input
+      id="horizontal"
+      [(ngModel)]="imgWidthPx"
+      type="text"
+      placeholder="Horizontal"
+    />
   </div>
   <div class="form-group">
     <label for="vertical">Vertical:</label>

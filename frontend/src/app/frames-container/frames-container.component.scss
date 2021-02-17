@@ -1,0 +1,14 @@
+#frame-container {
+  display: flex;
+  max-height: 100vh;
+  overflow-y: auto;
+  flex-direction: column;
+
+  app-frame-image {
+    margin: 10px;
+
+    &:first-child{
+      margin-top: 0px;
+    }
+  }
+}

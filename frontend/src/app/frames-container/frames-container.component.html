@@ -1,0 +1,7 @@
+<div id="frame-container">
+  <app-frame-image
+    *ngFor="let frame of frames"
+    [frame]="frame"
+    (onFrameSelection)="onFrameSelection.emit($event)"
+  ></app-frame-image>
+</div>

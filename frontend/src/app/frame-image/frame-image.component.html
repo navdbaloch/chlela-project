@@ -1,0 +1,10 @@
+<div class="frame-container">
+  <img
+    (click)="onFrameSelection.emit(frame)"
+    [src]="frame.url"
+    alt=""
+    width="250"
+    height="250"
+  />
+  <span class="price">${{ frame.price | number }}</span>
+</div>

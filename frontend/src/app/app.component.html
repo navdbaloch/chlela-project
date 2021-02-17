@@ -1,5 +1,10 @@
-<app-image-pane #imagePane class="canvas image-pane"></app-image-pane>
-<app-action-pane
-  (onActionPerformed)="imagePane.performAction($event)"
-  class="action-pane"
-></app-action-pane>
+<div id="main-container">
+  <app-frames-container (onFrameSelection)="imagePane.setFrame($event)" id="frame-container"></app-frames-container>
+  <div id="image-container">
+    <app-image-pane #imagePane class="canvas image-pane"></app-image-pane>
+    <app-action-pane
+      (onActionPerformed)="imagePane.performAction($event)"
+      class="action-pane"
+    ></app-action-pane>
+  </div>
+</div>

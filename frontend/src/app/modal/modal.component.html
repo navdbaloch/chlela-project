@@ -1,7 +1,10 @@
 <!-- The Modal -->
-<div [style.display]="show? 'block' : 'none'" class="modal">
+<div [style.display]="show ? 'block' : 'none'" class="modal">
   <!-- Modal content -->
   <div class="modal-content">
+    <span class="close" (click)="close()">
+      &times;
+    </span>
     <ng-content></ng-content>
   </div>
 </div>

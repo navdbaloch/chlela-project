@@ -1,0 +1,23 @@
+.frame-container {
+  position: relative;
+}
+
+img {
+  width: 100%;
+
+
+  &:hover {
+    cursor: pointer;
+    box-shadow: 0px 0px 20px 8px #8ed8ef;
+  }
+}
+
+.price {
+  position: absolute;
+  left: 0;
+  background: #1ea7fd;
+  display: inline-block;
+  padding: 5px;
+  color: white;
+  font-weight: 600;
+}

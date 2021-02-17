@@ -10,6 +10,8 @@ import { ActionPaneComponent } from './action-pane/action-pane.component';
 import { ImagePaneComponent } from './image-pane/image-pane.component';
 import { ModalComponent } from './modal/modal.component';
 import { PublishService } from './publish.service';
+import { FrameImageComponent } from './frame-image/frame-image.component';
+import { FramesContainerComponent } from './frames-container/frames-container.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +20,8 @@ import { PublishService } from './publish.service';
     ActionPaneComponent,
     ImagePaneComponent,
     ModalComponent,
+    FrameImageComponent,
+    FramesContainerComponent,
   ],
   imports: [
     BrowserModule,

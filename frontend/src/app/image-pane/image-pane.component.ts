@@ -1,8 +1,8 @@
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { filter, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { ActionType } from '../action-button/action-button.component';
+import { FrameDetail } from '../frames-container/frames.service';
 import { ModalComponent } from '../modal/modal.component';
 import { PublishService } from '../publish.service';
 import { dataURItoBlob } from '../utils';
@@ -24,12 +24,16 @@ export class ImagePaneComponent implements AfterViewInit {
   @ViewChild('modal') private modal: ModalComponent;
   @ViewChild('progressModal') private progressModal: ModalComponent;
   @ViewChild('fileDownloadModal') private fileDownloadModal: ModalComponent;
+  @ViewChild('publishModal') private publishModal: ModalComponent;
+
   private image: HTMLImageElement;
+  private frameImg: HTMLImageElement;
   private context2D: CanvasRenderingContext2D;
   private imgAngleInDegrees = 0;
   private imgPosX = 0; private imgPosY = 0;
   private imgWidth = 0; private imgHeight = 0;
-  private latestPublishImageName:string;
+  private latestPublishImageName: string;
+  private selectedFrame: FrameDetail = null;
   private get canvas(): HTMLCanvasElement {
     return this.canvasRef?.nativeElement;
   }
@@ -62,7 +66,7 @@ export class ImagePaneComponent implements AfterViewInit {
 
   private createImageEl() {
     this.image = document.createElement("img");
-
+    this.image.crossOrigin = "anonymous";
     this.image.onload = () => {
       this.imgWidth = this.image.width;
       this.imgHeight = this.image.height;
@@ -72,7 +76,19 @@ export class ImagePaneComponent implements AfterViewInit {
       this.resizeCanvas();
       this.drawImage();
     };
+  }
 
+  private createFrameImgEl() {
+    if (!this.selectedFrame) {
+      return;
+    }
+    // frame image
+    this.frameImg = document.createElement("img");
+    this.frameImg.crossOrigin = "anonymous";
+    this.frameImg.onload = () => {
+      this.drawImage();
+    };
+    this.frameImg.src = this.selectedFrame.url;
   }
 
   private clearCanvas() {
@@ -81,8 +97,10 @@ export class ImagePaneComponent implements AfterViewInit {
   }
 
   private clearImage() {
+    this.selectedFrame = null;
     this.clearCanvas();
     this.createImageEl();
+    this.createFrameImgEl();
     this.imgPosY = 0; this.imgPosX = 0;
   }
 
@@ -94,6 +112,7 @@ export class ImagePaneComponent implements AfterViewInit {
     this.context2D.rotate(degrees * Math.PI / 180);
     this.context2D.drawImage(this.image, -this.imgWidth / 2, -this.imgHeight / 2);
     this.context2D.restore();
+    this.drawFrame();
   }
 
   private loadImageFile(files: any[]) {
@@ -118,14 +137,27 @@ export class ImagePaneComponent implements AfterViewInit {
   private drawImage() {
     this.clearCanvas();
     this.context2D.drawImage(this.image, this.imgPosX, this.imgPosY, this.imgWidth, this.imgHeight);
+    this.drawFrame();
+  }
+
+  private drawFrame() {
+    if (!this.selectedFrame) {
+      return;
+    }
+    // this draw frame image now
+    this.context2D.drawImage(this.frameImg, 0, 0, this.canvasContainer.clientWidth, this.canvasContainer.clientHeight);
   }
 
   private resizeCanvas() {
-    this.canvas.width = this.imgWidth < this.canvasContainer.clientWidth ? this.canvasContainer.clientWidth : this.imgWidth;
-    this.canvas.height = this.imgHeight < this.canvasContainer.clientHeight ? this.canvasContainer.clientHeight : this.imgHeight;
+    // this.canvas.width = this.imgWidth < this.canvasContainer.clientWidth ? this.canvasContainer.clientWidth : this.imgWidth;
+    // this.canvas.height = this.imgHeight < this.canvasContainer.clientHeight ? this.canvasContainer.clientHeight : this.imgHeight;
+    this.canvas.width = this.canvasContainer.clientWidth;
+    this.canvas.height = this.canvasContainer.clientHeight;
+
   }
 
-  private publish() {
+  public publish() {
+    this.publishModal.close();
     this.fileProgress = 0;
     this.progressModal.open();
     const blob = dataURItoBlob(this.canvas.toDataURL());
@@ -136,6 +168,7 @@ export class ImagePaneComponent implements AfterViewInit {
           this.fileProgress = Math.round(100 * event.loaded / event.total);
         } else if (event instanceof HttpResponse) {
           this.latestPublishImageName = (event.body as PublishResponse).fileName;
+          this.clearImage();
           this.fileDownloadModal.open();
         }
       },
@@ -171,7 +204,7 @@ export class ImagePaneComponent implements AfterViewInit {
         this.modal.open();
         break;
       case ActionType.UPLOAD:
-        this.publish();
+        this.publishModal.open();
         break;
     }
   }
@@ -221,5 +254,15 @@ export class ImagePaneComponent implements AfterViewInit {
         this.moveImage('x', 10);
         break;
     }
+  }
+
+  setFrame(frame: FrameDetail) {
+    if (!this.isImageSelected) {
+      alert("Please first select an image");
+      return;
+    }
+
+    this.selectedFrame = frame;
+    this.createFrameImgEl();
   }
 }
