@@ -1,7 +1,7 @@
 # dependecies
 /node_modules
 
-/storage
+/storage/user-images
 /dist
 
 # IDE - VSCode
